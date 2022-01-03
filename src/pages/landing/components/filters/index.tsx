@@ -20,6 +20,7 @@ const Filters = (props: PropTypes) => {
       props.onChange({
         to,
         from,
+        page: 1,
       });
     }
   }, [to, from]);
@@ -27,13 +28,25 @@ const Filters = (props: PropTypes) => {
     switch (e.target.name) {
       case "name":
         setName(e.target.value);
-        return props.onChange({ searchBy: "NAME", search: e.target.value });
+        return props.onChange({
+          searchBy: "NAME",
+          search: e.target.value,
+          page: 1,
+        });
       case "title":
         setTitle(e.target.value);
-        return props.onChange({ searchBy: "TITLE", search: e.target.value });
+        return props.onChange({
+          searchBy: "TITLE",
+          search: e.target.value,
+          page: 1,
+        });
       case "field":
         setField(e.target.value);
-        return props.onChange({ searchBy: "FIELD", search: e.target.value });
+        return props.onChange({
+          searchBy: "FIELD",
+          search: e.target.value,
+          page: 1,
+        });
     }
   };
 
