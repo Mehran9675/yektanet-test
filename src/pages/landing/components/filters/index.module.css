@@ -1,0 +1,28 @@
+.container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #ffc952;
+    font-size: 2rem;
+    height: 10rem;
+}
+.container label {
+    text-align: right;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+.container input {
+    height: 3rem;
+    width: 15rem;
+    text-align: right;
+}
+
+.container input[name="date"] {
+    margin: 0 0.5rem;
+}
+
+.container button {
+    height: 3rem;
+    font-size: 1.75rem;
+    margin-top: 2.5rem;
+}

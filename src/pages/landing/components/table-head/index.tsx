@@ -6,7 +6,6 @@ interface PropTypes {
 }
 
 const TableHead = (props: PropTypes) => {
-  if (!props.HeadItems.length) return null;
   return (
     <tr>
       {props.HeadItems.map((item) => (

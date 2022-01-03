@@ -1,0 +1,53 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin-top: 1rem;
+    font-size: 2rem !important;
+}
+.container button {
+    font-family: Dialog, sans-serif;
+    font-size: 1.5rem;
+    padding: 0.5rem 1rem;
+    margin: 0.2rem;
+    background-color: #1e252b;
+    color: #fff;
+    border: none;
+    border-radius: 0.3rem;
+
+}
+.container button:hover {
+    opacity: 0.8;
+}
+.container button:disabled {
+    opacity: 0.8;
+}
+.container span {
+    margin: 0 1rem;
+}
+
+.container input {
+    height: 3rem;
+    width: 6rem;
+    padding: 0 0.5rem;
+    text-align: left;
+    margin: 0.2rem 1rem 0.2rem 0.2rem;
+    font-family: Dialog, sans-serif;
+    border: 2px solid #1e252b;
+    border-radius: 0.3rem;
+    direction: ltr;
+}
+
+.container select {
+    height: 3rem;
+    padding: 0 0.5rem;
+    text-align: end;
+    margin: 0.2rem 1rem 0.2rem 0.2rem;
+    font-family: Dialog, sans-serif;
+    border: 2px solid #1e252b;
+    border-radius: 0.3rem;
+}
+.container select option {
+    font-family: Dialog, sans-serif;
+
+}

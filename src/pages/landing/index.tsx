@@ -1,47 +1,62 @@
-import useIndexedData from "@/common/hooks";
-import { Entry } from "@/common/types";
-import { useState } from "react";
+import useIndexedData from "common/hooks";
 import TableBody from "./components/table-body";
 import TableHead from "./components/table-head";
 import { TableItem } from "./types";
+import styles from "./index.module.css";
+import Pagination from "./components/pagination";
+import Filters from "./components/filters";
+import Loading from "common/componenets/loading";
 
 const Landing = () => {
-  const [rows, setRows] = useState<Entry[]>([]);
-
-  useIndexedData();
-
+  const { data, setFilters, filters, resetFilters, loading } = useIndexedData();
   const tableItems: TableItem[] = [
     {
-      fieldKey: "",
-      fieldName: "",
+      fieldKey: "name",
+      fieldName: "نام تغییر دهنده",
     },
     {
-      fieldKey: "",
-      fieldName: "",
+      fieldKey: "date",
+      fieldName: "تاریخ",
     },
     {
-      fieldKey: "",
-      fieldName: "",
+      fieldKey: "title",
+      fieldName: "نام آگهی",
     },
     {
-      fieldKey: "",
-      fieldName: "",
+      fieldKey: "field",
+      fieldName: "فیلد",
     },
     {
-      fieldKey: "",
-      fieldName: "",
+      fieldKey: "old_value",
+      fieldName: "مقدار قدیمی",
     },
     {
-      fieldKey: "",
-      fieldName: "",
+      fieldKey: "new_value",
+      fieldName: "مقدار جدید",
     },
   ];
-
+  if (loading) return <Loading />;
   return (
-    <table>
-      <TableHead HeadItems={tableItems} />
-      <TableBody rows={rows} tableItems={tableItems} />
-    </table>
+    <div className={styles["container"]}>
+      <Filters
+        reset={resetFilters}
+        onChange={(filter) => setFilters({ ...filters, ...filter })}
+      />
+      <table>
+        <thead>
+          <TableHead HeadItems={tableItems} />
+        </thead>
+        <tbody>
+          <TableBody rows={data.items || []} tableItems={tableItems} />
+        </tbody>
+      </table>
+      <Pagination
+        current={data.page}
+        total={data.total}
+        onChange={(page: any) => setFilters({ ...filters, ...page })}
+        pageSize={data.pageSize}
+      />
+    </div>
   );
 };
 

@@ -1,41 +1,112 @@
-import { Entry } from "@/common/types";
-import { useEffect, useState } from "react";
+import { Entry, Filters, Pagination } from "@/common/types";
+import { useEffect, useMemo, useState } from "react";
 import BST from "services/bst";
+import { useLocation, useSearchParams } from "react-router-dom";
+import getTime from "../function/get-time";
 
-const useIndexedData = () => {
-  const [data, setData] = useState<Record<string, BST>>();
-  const indexedDate = new BST();
-  const indexedName = new BST();
-  const indexedTitle = new BST();
-  const indexedField = new BST();
-  const indexedOldValue = new BST();
-  const indexedNewValue = new BST();
+const useIndexedData = (): {
+  data: Pagination;
+  filters: Filters;
+  setFilters: (newFilter: Filters) => void;
+  resetFilters: () => void;
+  loading: boolean;
+} => {
+  const [filters, setFilters] = useState<Filters>({
+    sortBy: undefined,
+    order: undefined,
+    page: 1,
+    pageSize: undefined,
+  });
+  const [data, setData] = useState<Pagination>({
+    total: 0,
+    pageSize: filters.pageSize || 15,
+    items: [],
+    page: filters.page,
+  });
+  const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useSearchParams();
+  const indexedDate = useMemo(() => new BST(), []);
+  const pathname = useLocation().pathname;
 
   useEffect(() => {
-    indexData();
+    indexData({ ...filters, ...getQueries() });
   }, []);
 
-  const getTime = (date: string) => {
-    return new Date(date).getTime();
-  };
-
-  const indexData = () => {
-    fetch("/data.json").then(async (res) => {
-      const data = await res.json();
-      data.forEach(index);
+  useEffect(() => {
+    if (!query) return;
+    indexedDate.getOrderedItems({ ...filters, ...getQueries() }).then((res) => {
+      setData(res);
+      setLoading(false);
     });
-  };
+  }, [pathname]);
 
   const index = (entry: Entry) => {
     indexedDate.insert(getTime(entry.date), entry);
-    indexedName.insert(entry.name, entry);
-    indexedTitle.insert(entry.title, entry);
-    indexedField.insert(entry.field, entry);
-    indexedOldValue.insert(entry.old_value, entry);
-    indexedNewValue.insert(entry.new_value, entry);
   };
 
-  return data;
+  const indexData = (filters: Filters) => {
+    fetch("/data.json").then(async (res) => {
+      const data = await res.json();
+      data.forEach(index);
+      indexedDate.getOrderedItems(filters).then((res) => {
+        setData(res);
+        setLoading(false);
+      });
+    });
+  };
+
+  const getQueries = () => {
+    const filters: Filters = {
+      to: undefined,
+      page: 1,
+      pageSize: undefined,
+      from: undefined,
+      sortBy: undefined,
+      order: undefined,
+      search: undefined,
+      searchBy: undefined,
+    };
+    for (const [key] of Object.entries(filters)) {
+      if (query.has(key)) {
+        // @ts-ignore
+        filters[key] = query.get(key);
+      }
+    }
+    const refined = deleteUndefined(filters);
+    setFilters(refined);
+    return refined;
+  };
+  const deleteUndefined = (obj: any) => {
+    Object.keys(obj).forEach((key) => {
+      if (obj[key] === undefined) {
+        delete obj[key];
+      }
+    });
+    return obj;
+  };
+  const commitFilters = (newFilters: Filters) => {
+    if (!newFilters) return;
+    setLoading(true);
+    const allFilters = { ...filters, ...newFilters };
+    setQuery(allFilters as any);
+    setFilters(allFilters);
+    indexedDate.getOrderedItems(allFilters).then((res) => {
+      setData(res);
+      setLoading(false);
+    });
+  };
+
+  const resetFilters = () => {
+    setLoading(true);
+    setQuery({ page: 1, pageSize: filters.pageSize } as any);
+    setFilters({ page: 1, pageSize: filters.pageSize });
+    indexedDate.reset().then((res) => {
+      setData(res);
+      setLoading(false);
+    });
+  };
+
+  return { data, filters, setFilters: commitFilters, resetFilters, loading };
 };
 
 export default useIndexedData;
