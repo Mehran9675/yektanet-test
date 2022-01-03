@@ -11,6 +11,10 @@ interface PropTypes {
 const Filters = (props: PropTypes) => {
   const [to, setTo] = useState("");
   const [from, setFrom] = useState("");
+  const [name, setName] = useState("");
+  const [title, setTitle] = useState("");
+  const [feild, setField] = useState("");
+
   useEffect(() => {
     if (to && from) {
       props.onChange({
@@ -22,10 +26,13 @@ const Filters = (props: PropTypes) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
       case "name":
+        setName(e.target.value);
         return props.onChange({ searchBy: "NAME", search: e.target.value });
       case "title":
+        setTitle(e.target.value);
         return props.onChange({ searchBy: "TITLE", search: e.target.value });
       case "field":
+        setField(e.target.value);
         return props.onChange({ searchBy: "FIELD", search: e.target.value });
     }
   };

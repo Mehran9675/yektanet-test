@@ -9,7 +9,7 @@ const useIndexedData = (): {
   filters: Filters;
   setFilters: (newFilter: Filters) => void;
   resetFilters: () => void;
-  loading: boolean;
+  isLoading: boolean;
 } => {
   const [filters, setFilters] = useState<Filters>({
     sortBy: undefined,
@@ -23,22 +23,28 @@ const useIndexedData = (): {
     items: [],
     page: filters.page,
   });
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [query, setQuery] = useSearchParams();
   const indexedDate = useMemo(() => new BST(), []);
   const pathname = useLocation().pathname;
+  let timer: any;
 
   useEffect(() => {
     indexData({ ...filters, ...getQueries() });
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
     if (!query) return;
     indexedDate.getOrderedItems({ ...filters, ...getQueries() }).then((res) => {
       setData(res);
-      setLoading(false);
+      stopLoading(false);
     });
   }, [pathname]);
+
+  const stopLoading = (value: boolean) => {
+    timer = setTimeout(() => setIsLoading(value), 1000);
+  };
 
   const index = (entry: Entry) => {
     indexedDate.insert(getTime(entry.date), entry);
@@ -50,7 +56,7 @@ const useIndexedData = (): {
       data.forEach(index);
       indexedDate.getOrderedItems(filters).then((res) => {
         setData(res);
-        setLoading(false);
+        stopLoading(false);
       });
     });
   };
@@ -86,27 +92,27 @@ const useIndexedData = (): {
   };
   const commitFilters = (newFilters: Filters) => {
     if (!newFilters) return;
-    setLoading(true);
+    setIsLoading(true);
     const allFilters = { ...filters, ...newFilters };
     setQuery(allFilters as any);
     setFilters(allFilters);
     indexedDate.getOrderedItems(allFilters).then((res) => {
       setData(res);
-      setLoading(false);
+      stopLoading(false);
     });
   };
 
   const resetFilters = () => {
-    setLoading(true);
+    setIsLoading(true);
     setQuery({ page: 1, pageSize: filters.pageSize } as any);
     setFilters({ page: 1, pageSize: filters.pageSize });
     indexedDate.reset().then((res) => {
       setData(res);
-      setLoading(false);
+      stopLoading(false);
     });
   };
 
-  return { data, filters, setFilters: commitFilters, resetFilters, loading };
+  return { data, filters, setFilters: commitFilters, resetFilters, isLoading };
 };
 
 export default useIndexedData;

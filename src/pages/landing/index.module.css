@@ -1,12 +1,12 @@
 .container {
-  width: 100%;
-  max-width: 1200px;
+  width: 1200px;
   margin: 0 auto;
   display: block;
 }
 
 .container table {
-  width: 100%;
+  width: 1200px;
+  overflow: auto;
 }
 .container table thead {
   background-color: #ffc952;
@@ -21,7 +21,6 @@
   background-color: #1e252b;
   color: white;
   font-size: 1.5rem;
-
 }
 .container table tbody tr:nth-child(odd) {
   background-color: #212c3f;
