@@ -43,7 +43,8 @@ const useIndexedData = (): {
   }, [pathname]);
 
   const stopLoading = (value: boolean) => {
-    timer = setTimeout(() => setIsLoading(value), 1000);
+    timer = setTimeout(() => setIsLoading(value), 500);
+    // setIsLoading(false);
   };
 
   const index = (entry: Entry) => {

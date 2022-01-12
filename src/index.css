@@ -1,16 +1,16 @@
 @font-face {
-    src: url('/public/farsi.ttf');
-    font-family: 'farsi';
+  src: url("/public/farsi.ttf");
+  font-family: "farsi";
 }
 
 html {
-    background-color: #f5f5f5;
-    font-size: 62.5%;
+  background-color: #3e424e;
+  font-size: 62.5%;
 }
 
 * {
-    box-sizing: border-box;
-    text-align: center;
-    font-family: "farsi", FreeSans;
-    direction: rtl;
+  box-sizing: border-box;
+  text-align: center;
+  font-family: "farsi", FreeSans;
+  direction: rtl;
 }

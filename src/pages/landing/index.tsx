@@ -6,6 +6,7 @@ import styles from "./index.module.css";
 import Pagination from "./components/pagination";
 import Filters from "./components/filters";
 import Loading from "common/componenets/loading";
+import NoResults from "./components/no-results";
 
 const Landing = () => {
   const { data, setFilters, filters, resetFilters, isLoading } =
@@ -46,7 +47,7 @@ const Landing = () => {
         />
         {isLoading ? (
           <Loading />
-        ) : (
+        ) : data.items.length ? (
           <table>
             <thead>
               <TableHead HeadItems={tableItems} />
@@ -55,7 +56,10 @@ const Landing = () => {
               <TableBody rows={data.items || []} tableItems={tableItems} />
             </tbody>
           </table>
+        ) : (
+          <NoResults />
         )}
+
         <Pagination
           current={data.page}
           total={data.total}

@@ -28,7 +28,7 @@ export default class BST {
 
   private root: BTSNode | null;
   private inOrder: Entry[];
-  private readonly items: Record<number, Entry[]>;
+  private items: Record<number, Entry[]>;
   private currentPageSize: number;
   private pageCount: number;
 
@@ -114,6 +114,7 @@ export default class BST {
   }
 
   private paginate(orderedData: Entry[], pageSize: number) {
+    if (!this.inOrder.length) this.items = [];
     this.currentPageSize = pageSize;
     let page = 1;
     let chunk: Entry[] = [];

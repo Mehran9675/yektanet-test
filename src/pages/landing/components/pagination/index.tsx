@@ -25,7 +25,7 @@ const Pagination = (props: PropTypes) => {
     return props.onChange({ page: pageInput });
   };
 
-  return (
+  return props.total - 1 ? (
     <div className={styles["container"]}>
       <select onChange={handlePageSizeChange} value={props.pageSize}>
         <option>15</option>
@@ -59,6 +59,6 @@ const Pagination = (props: PropTypes) => {
         type="number"
       />
     </div>
-  );
+  ) : null;
 };
 export default Pagination;
